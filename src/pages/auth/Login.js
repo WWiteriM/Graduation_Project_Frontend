@@ -20,6 +20,14 @@ const Login = ({ history }) => {
 
     let dispatch = useDispatch();
 
+    const roleBasedRedirect = (res) => {
+        if (res.data.role === 'admin') {
+            history.push('/admin/dashboard');
+        } else {
+            history.push('/user/history');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -40,8 +48,9 @@ const Login = ({ history }) => {
                             _id: res.data._id,
                         },
                     });
+                    roleBasedRedirect(res);
                 })
-                .catch();
+                .catch(err => console.log(err));
 
             // history.push('/');
         } catch (error) {
@@ -67,9 +76,11 @@ const Login = ({ history }) => {
                             _id: res.data._id,
                         },
                     });
+                    roleBasedRedirect(res);
                 })
-                .catch();
-            history.push('/');
+                .catch(err => console.log(err));
+
+            // history.push('/');
         }).catch((error) => toast.error(error.message));
     }
 
