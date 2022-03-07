@@ -9,11 +9,11 @@ const UserNav = () => (
             </li>
 
             <li className='nav-item'>
-                <Link to='/user/password' className='nav-link'>Password</Link>
+                <Link to='/user/wishlist' className='nav-link'>Wishlist</Link>
             </li>
 
             <li className='nav-item'>
-                <Link to='/user/wishlist' className='nav-link'>Wishlist</Link>
+                <Link to='/user/password' className='nav-link'>Password</Link>
             </li>
         </ul>
     </nav>
