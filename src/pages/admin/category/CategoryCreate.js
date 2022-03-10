@@ -5,11 +5,14 @@ import { useSelector } from 'react-redux';
 import { createCategory, getCategories, removeCategory } from '../../../functions/category';
 import { Link } from 'react-router-dom';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import CategoryForm from '../../../components/forms/CategoryForm';
+import LocalSearch from '../../../components/forms/LocalSearch';
 
 const CategoryCreate = () => {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [keyword, setKeyword] = useState('');
 
     const { user } = useSelector((state) => ({ ...state }));
 
@@ -55,23 +58,7 @@ const CategoryCreate = () => {
         }
     };
 
-    const categoryForm = () => (
-        <form onSubmit={handleSubmit}>
-            <div className='form-group'>
-                <label>Name</label>
-                <input
-                    type='text'
-                    className='form-control'
-                    onChange={e => setName(e.target.value)}
-                    value={name}
-                    autoFocus
-                    required
-                />
-                <br />
-                <button className='btn btn-outlined-primary'>Save</button>
-            </div>
-        </form>
-    );
+    const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword);
 
     return (
         <div className="container-fluid">
@@ -85,9 +72,10 @@ const CategoryCreate = () => {
                     ) : (
                         <h4>Create category</h4>
                     )}
-                    {categoryForm()}
+                    <CategoryForm handleSubmit={handleSubmit} name={name} setName={setName} />
+                    <LocalSearch setKeyword={setKeyword} keyword={keyword} />
                     <hr />
-                    {categories.map((c) => (
+                    {categories.filter(searched(keyword)).map((c) => (
                         <div key={c._id} className='alert alert-secondary'>
                             {c.name}
                             <span onClick={() => handleRemove(c.slug)} className='btn btn-sm float-right'>
