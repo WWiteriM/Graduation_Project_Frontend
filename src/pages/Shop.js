@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProductByCount, fetchProductsByFilter } from '../functions/product';
 import { useSelector, useDispatch } from 'react-redux';
-import { Menu, Slider, Checkbox } from 'antd';
+import { Menu, Slider, Checkbox, Radio } from 'antd';
 import { DollarOutlined, DownSquareOutlined, StarOutlined, TagsOutlined } from '@ant-design/icons';
 import { getCategories } from '../functions/category';
 import { getSubs } from '../functions/sub';
@@ -20,6 +20,11 @@ const Shop = () => {
     const [star, setStar] = useState('');
     const [subs, setSubs] = useState([]);
     const [sub, setSub] = useState('');
+    const [brands, setBrands] = useState(['Apple', 'Samsung', 'Microsoft', 'Lenovo', 'ASUS', 'MSI', 'Xiaomi']);
+    const [brand, setBrand] = useState('');
+    const [colors, setColors] = useState(['Black', 'Brown', 'Silver', 'White', 'Blue']);
+    const [color, setColor] = useState('');
+    const [shipping, setShipping] = useState('');
 
     let dispatch = useDispatch();
     const { search } = useSelector((state) => ({ ...state }));
@@ -64,6 +69,9 @@ const Shop = () => {
         setPrice(value);
         setStar('');
         setSub('');
+        setBrand('');
+        setColor('');
+        setShipping('');
         setTimeout(() => {
             setOk(!ok);
         }, 500)
@@ -93,6 +101,9 @@ const Shop = () => {
         setPrice([0, 0]);
         setStar('');
         setSub('');
+        setBrand('');
+        setColor('');
+        setShipping('');
         let inTheState = [...categoryIds];
         let justChecked = e.target.value;
         let foundInTheState = inTheState.indexOf(justChecked);
@@ -116,6 +127,9 @@ const Shop = () => {
         setCategoryIds([]);
         setStar(num);
         setSub('');
+        setBrand('');
+        setColor('');
+        setShipping('');
         fetchProducts({ stars: num });
     };
 
@@ -150,7 +164,103 @@ const Shop = () => {
         setPrice([0, 0]);
         setCategoryIds([]);
         setStar('');
+        setBrand('');
+        setColor('');
+        setShipping('');
         fetchProducts({ sub });
+    };
+
+    const showBrands = () => brands.map((b) => (
+        <Radio
+            value={b}
+            name={b}
+            checked={b === brand}
+            onChange={handleBrand}
+            className='pb-1 ml-4 pr-5'
+            style={{ width: '200px' }}
+        >
+            {b}
+        </Radio>
+    ));
+
+    const handleBrand = (e) => {
+        setSub('');
+        dispatch({
+            type: 'SEARCH_QUERY',
+            payload: { text: '' },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setStar('');
+        setBrand(e.target.value);
+        setColor('');
+        setShipping('');
+        fetchProducts({ brand: e.target.value });
+    };
+
+    const showColors = () => colors.map((c) => (
+        <Radio
+            value={c}
+            name={c}
+            checked={c === color}
+            onChange={handleColor}
+            className='pb-1 ml-4 pr-5'
+            style={{ width: '200px' }}
+        >
+            {c}
+        </Radio>
+    ));
+
+    const handleColor = (e) => {
+        setSub('');
+        dispatch({
+            type: 'SEARCH_QUERY',
+            payload: { text: '' },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setStar('');
+        setBrand('');
+        setColor(e.target.value);
+        setShipping('');
+        fetchProducts({ color: e.target.value });
+    };
+
+    const showShipping = () => (
+        <>
+            <Checkbox
+                className='pb-2 pl-4 pr-4'
+                onChange={handleShippingChange}
+                value='Yes'
+                checked={shipping === 'Yes'}
+            >
+                Yes
+            </Checkbox>
+
+            <Checkbox
+                className='pb-2 pl-4 pr-4'
+                onChange={handleShippingChange}
+                value='No'
+                checked={shipping === 'No'}
+            >
+                No
+            </Checkbox>
+        </>
+    );
+
+    const handleShippingChange = (e) => {
+        setSub('');
+        dispatch({
+            type: 'SEARCH_QUERY',
+            payload: { text: '' },
+        });
+        setPrice([0, 0]);
+        setCategoryIds([]);
+        setStar('');
+        setBrand('');
+        setColor('');
+        setShipping(e.target.value);
+        fetchProducts({ shipping: e.target.value });
     };
 
     return (
@@ -160,7 +270,7 @@ const Shop = () => {
                     <h4>Search/Filter</h4>
                     <hr />
 
-                    <Menu defaultOpenKeys={['1', '2', '3', '4']} mode='inline'>
+                    <Menu defaultOpenKeys={['1', '2', '3', '4', '5', '6', '7']} mode='inline'>
                         <SubMenu
                             key='1'
                             title={
@@ -217,6 +327,45 @@ const Shop = () => {
                         >
                             <div className='pl-4 pr-4'>
                                 {showSubs()}
+                            </div>
+                        </SubMenu>
+
+                        <SubMenu
+                            key='5'
+                            title={
+                                <span className='h6'>
+                                    <TagsOutlined /> Brands
+                                </span>
+                            }
+                        >
+                            <div className='pr-5'>
+                                {showBrands()}
+                            </div>
+                        </SubMenu>
+
+                        <SubMenu
+                            key='6'
+                            title={
+                                <span className='h6'>
+                                    <TagsOutlined /> Colors
+                                </span>
+                            }
+                        >
+                            <div className='pr-5'>
+                                {showColors()}
+                            </div>
+                        </SubMenu>
+
+                        <SubMenu
+                            key='7'
+                            title={
+                                <span className='h6'>
+                                    <TagsOutlined /> Shipping
+                                </span>
+                            }
+                        >
+                            <div className='pr-5'>
+                                {showShipping()}
                             </div>
                         </SubMenu>
                     </Menu>
