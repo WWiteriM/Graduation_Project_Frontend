@@ -27,6 +27,7 @@ import Shop from './pages/Shop';
 import Cart from './pages/Cart';
 import SideDrawer from './components/drawer/SideDrawer';
 import Checkout from './pages/Checkout';
+import CreateCouponPage from './pages/admin/coupon/CreateCoupon';
 
 import UserRoute from './components/routes/UserRoute';
 import AdminRoute from './components/routes/AdminRoute';
@@ -90,6 +91,7 @@ const App = () => {
                 <Route exact path="/shop" component={Shop} />
                 <Route exact path="/cart" component={Cart} />
                 <UserRoute exact path="/checkout" component={Checkout} />
+                <AdminRoute exact path="/admin/coupon" component={CreateCouponPage} />
             </Switch>
         </>
     );

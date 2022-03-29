@@ -15,3 +15,19 @@ export const getUserCart = async (authToken) => {
         },
     });
 };
+
+export const emptyUserCart = async (authToken) => {
+    return await axios.delete(`${process.env.REACT_APP_API}/user/cart`, {
+        headers: {
+            authToken
+        },
+    });
+};
+
+export const saveUserAddress = async (authToken, address) => {
+    return await axios.post(`${process.env.REACT_APP_API}/user/address`, { address }, {
+        headers: {
+            authToken
+        },
+    });
+};

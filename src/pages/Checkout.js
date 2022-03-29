@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserCart } from '../functions/user';
+import { toast } from 'react-toastify';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { getUserCart, emptyUserCart, saveUserAddress } from '../functions/user';
 
 const Checkout = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => ({ ...state }));
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
+    const [address, setAddress] = useState('');
+    const [addressSaved, setAddressSaved] = useState(false);
 
     useEffect(() => {
         getUserCart(user.token).then((res) => {
@@ -16,7 +21,29 @@ const Checkout = () => {
     }, []);
 
     const saveAddressToDb = () => {
+        saveUserAddress(user.token, address).then((res) => {
+            if (res.data.ok) {
+                setAddressSaved(true);
+                toast.success('Address saved');
+            }
+        })
+    };
 
+    const emptyCart = () => {
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('cart');
+        }
+
+        dispatch({
+            type: 'ADD_TO_CART',
+            payload: [],
+        });
+
+        emptyUserCart(user.token).then((res) => {
+            setProducts([]);
+            setTotal(0);
+            toast.success('Cart is empty. Continue shopping.');
+        });
     };
 
     return (
@@ -24,8 +51,8 @@ const Checkout = () => {
             <div className='col-md-6'>
                 <h4>Delivery Address</h4>
                 <br />
-                textarea
-                <button className='btn-primary mt-2' onClick={saveAddressToDb}>
+                <ReactQuill theme='snow' value={address} onChange={setAddress} />
+                <button className='btn btn-primary mt-2' onClick={saveAddressToDb}>
                     Save
                 </button>
                 <hr />
@@ -51,12 +78,12 @@ const Checkout = () => {
 
                 <div className='row'>
                     <div className='col-md-6'>
-                        <button className='btn-primary'>
+                        <button className='btn btn-primary' disabled={!addressSaved || !products.length}>
                             Place order
                         </button>
                     </div>
                     <div className='col-md-6'>
-                        <button className='btn-primary'>
+                        <button disabled={!products.length} onClick={emptyCart} className='btn btn-primary'>
                             Empty cart
                         </button>
                     </div>
