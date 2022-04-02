@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@david.kucsai/react-pdf-table": "^0.3.0",
+    "@react-pdf/renderer": "^1.6.11",
     "@stripe/react-stripe-js": "^1.7.0",
     "@stripe/stripe-js": "^1.26.0",
     "@testing-library/jest-dom": "^5.16.1",
