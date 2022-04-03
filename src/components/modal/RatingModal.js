@@ -32,13 +32,10 @@ const RatingModal = ({ children }) => {
                 title='Leave your rating'
                 centered
                 visible={modalVisible}
-                onOk={() => {
-                    setModalVisible(false);
-                    toast.success('Thanks for your review. It will appear soon');
-                }}
                 onCancel={() => {
                     setModalVisible(false);
                 }}
+                footer={null}
             >
                 {children}
             </Modal>

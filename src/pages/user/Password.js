@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import UserNav from '../../components/nav/UserNav';
-import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
+import UserNav from '../../components/nav/UserNav';
+import AdminNav from '../../components/nav/AdminNav';
+import { auth } from '../../firebase';
 
 const Password = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const role = localStorage.getItem('role');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,7 +51,11 @@ const Password = () => {
         <div className="container-fluid">
             <div className="row">
                 <div className='col-md-2'>
-                    <UserNav />
+                    {role === 'admin' ? (
+                        <AdminNav />
+                    ) : (
+                        <UserNav />
+                    )}
                 </div>
                 <div className="col">
                     {loading ? (

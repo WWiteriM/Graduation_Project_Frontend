@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Tabs, Tooltip } from 'antd';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -11,6 +11,8 @@ import Laptop from '../../images/laptop.jpg';
 import ProductListItems from './ProductListItems';
 import RatingModal from '../modal/RatingModal';
 import { showAverage } from '../../functions/rating';
+import { addToWishlist } from '../../functions/user';
+import {toast} from "react-toastify";
 
 const { TabPane } = Tabs;
 
@@ -20,6 +22,8 @@ const SingleProduct = ({ product, onStarClick, star }) => {
 
     const { user, cart } = useSelector((state) => ({ ...state }));
     const dispatch = useDispatch();
+    const history = useHistory();
+    const role = localStorage.getItem('role');
 
     const handleAddToCart = () => {
         let cart = [];
@@ -46,6 +50,57 @@ const SingleProduct = ({ product, onStarClick, star }) => {
                 payload: true,
             });
         }
+    };
+
+    const handleActions = () => {
+        if (role === 'admin') {
+            return [
+                <Tooltip title={tooltip}>
+                    <a onClick={handleAddToCart}>
+                        <ShoppingCartOutlined  className='text-danger' /> <br /> Add to Cart
+                    </a>
+                </Tooltip>,
+                <RatingModal>
+                    <StarRating
+                        name={_id}
+                        numberOfStars={5}
+                        rating={star}
+                        changeRating={onStarClick}
+                        isSelectable={true}
+                        starRatedColor='red'
+                    />
+                </RatingModal>
+            ]
+        } else {
+            return [
+                <Tooltip title={tooltip}>
+                    <a onClick={handleAddToCart}>
+                        <ShoppingCartOutlined  className='text-danger' /> <br /> Add to Cart
+                    </a>
+                </Tooltip>,
+                <a onClick={handleAddToWishlist}>
+                    <HeartOutlined className='text-info' /> <br /> Add to Wishlist
+                </a>,
+                <RatingModal>
+                    <StarRating
+                        name={_id}
+                        numberOfStars={5}
+                        rating={star}
+                        changeRating={onStarClick}
+                        isSelectable={true}
+                        starRatedColor='red'
+                    />
+                </RatingModal>
+            ]
+        }
+    }
+
+    const handleAddToWishlist = (e) => {
+        e.preventDefault();
+        addToWishlist(product._id, user.token).then((res) => {
+            toast.success('Added to wishlist');
+            history.push('/user/wishlist');
+        });
     };
 
     return (
@@ -85,26 +140,7 @@ const SingleProduct = ({ product, onStarClick, star }) => {
                     )}
 
                 <Card
-                    actions={[
-                        <Tooltip title={tooltip}>
-                            <a onClick={handleAddToCart}>
-                                <ShoppingCartOutlined  className='text-danger' /> <br /> Add to Cart
-                            </a>
-                        </Tooltip>,
-                        <Link to='/'>
-                            <HeartOutlined className='text-info' /> <br /> Add to Wishlist
-                        </Link>,
-                        <RatingModal>
-                            <StarRating
-                                name={_id}
-                                numberOfStars={5}
-                                rating={star}
-                                changeRating={onStarClick}
-                                isSelectable={true}
-                                starRatedColor='red'
-                            />
-                        </RatingModal>
-                    ]}
+                    actions={handleActions()}
                 >
                     <ProductListItems product={product} />
                 </Card>

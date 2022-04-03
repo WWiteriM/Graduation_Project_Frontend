@@ -24,6 +24,7 @@ const Login = ({ history }) => {
 
     const roleBasedRedirect = (res) => {
         let intended = history.location.state;
+        localStorage.setItem('role', res.data.role);
         if (intended) {
             history.push(intended.from);
         } else {
