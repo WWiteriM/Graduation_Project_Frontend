@@ -108,7 +108,7 @@ const SingleProduct = ({ product, onStarClick, star }) => {
             <div className='col-md-6'>
                 {images && images.length ? (
                     <Carousel showArrows={true} autoPlay infiniteLoop>
-                        {images && images.map((i) => <img src={i.url} key={i.public_id} />)}
+                        {images && images.map((i) => <img src={i.url} key={i.public_id} />) }
                     </Carousel>
                 ) : (
                     <Card
@@ -126,7 +126,7 @@ const SingleProduct = ({ product, onStarClick, star }) => {
                         {description && description}
                     </TabPane>
                     <TabPane tab='More' key='2'>
-                        Call use on xxxx xxx xxx to learn more about this product
+                        Свяжитесь по телефону +375(хх)ххх-хх-хх для получения информации о товаре
                     </TabPane>
                 </Tabs>
             </div>

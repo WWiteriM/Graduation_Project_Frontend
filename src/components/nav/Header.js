@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Badge } from 'antd';
+import { Menu, Badge, Typography } from 'antd';
 import {
     AppstoreOutlined,
     SettingOutlined,
@@ -91,6 +91,9 @@ const Header = () => {
 
             <span className='float-right p-1'>
                 <Search />
+            </span>
+            <span className='float-left pl-4 pr-3'>
+                <Typography>LOCALHOST.by</Typography>
             </span>
         </Menu>
     )

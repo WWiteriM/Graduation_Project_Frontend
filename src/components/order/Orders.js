@@ -2,7 +2,9 @@ import React from 'react';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import ShowPaymentInfo from '../cards/ShowPaymentInfo';
 
-const Orders = ({ orders, handleStatusChange }) => {
+const Orders = ({ orders, handleStatusChange, keyword }) => {
+    const searched = (keyword) => (c) => c.paymentIntent.id.toLowerCase().includes(keyword);
+
     const showOrderInTable = (order) => (
         <table className='table table-bordered'>
             <thead className='thead-light'>
@@ -38,7 +40,7 @@ const Orders = ({ orders, handleStatusChange }) => {
 
     return (
         <>
-            {orders.map((order) => (
+            {orders.filter(searched(keyword)).map((order) => (
                 <div key={order._id} className='row pb-5'>
                     <div className='btn btn-block bg-light'>
                         <ShowPaymentInfo order={order} showStatus={false}/>

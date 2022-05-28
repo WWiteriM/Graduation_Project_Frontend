@@ -4,9 +4,11 @@ import { toast } from 'react-toastify';
 import { getOrders, changeStatus } from '../../functions/admin';
 import AdminNav from '../../components/nav/AdminNav';
 import Orders from '../../components/order/Orders';
+import LocalSearch from '../../components/forms/LocalSearch';
 
 const AdminDashboard = () => {
     const [orders, setOrders] = useState([]);
+    const [keyword, setKeyword] = useState('');
     const { user } = useSelector((state) => ({ ...state }));
 
     useEffect(() => {
@@ -35,7 +37,8 @@ const AdminDashboard = () => {
                 </div>
                 <div className="col-md-10">
                     <h4>Admin Dashboard</h4>
-                    <Orders orders={orders} handleStatusChange={handleStatusChange} />
+                    <LocalSearch setKeyword={setKeyword} keyword={keyword} />
+                    <Orders orders={orders} handleStatusChange={handleStatusChange} keyword={keyword}/>
                 </div>
             </div>
         </div>
